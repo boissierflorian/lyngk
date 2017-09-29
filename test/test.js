@@ -34,3 +34,10 @@ LyngkTestCase.prototype.testStory4 = function () {
     var coordinates = new Lyngk.Coordinates("A", 1);
     assertTrue(coordinates.getRepresentation() === "invalid");
 };
+
+LyngkTestCase.prototype.testStory5 = function() {
+    var coordinates = new LyngkTestCase.Coordinates("A", 3);
+    var copy = coordinates.clone();
+
+    assertTrue(coordinates.getColonne() === copy.getColonne() && coordinates.getLigne() === copy.getLigne());
+};
