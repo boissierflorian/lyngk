@@ -46,4 +46,8 @@ Lyngk.Coordinates = function (c, l) {
     this.getLigne = function () {
       return ligne;
     };
+
+    this.hash = function() {
+        return colonne.charCodeAt(0) + ligne * (4 * ligne) - 7;
+    };
 };
