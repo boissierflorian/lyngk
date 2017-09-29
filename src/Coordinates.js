@@ -28,6 +28,9 @@ Lyngk.Coordinates = function (c, l) {
     };
 
     this.getRepresentation = function() {
+        if (!this.isValid())
+            return "invalid";
+
         return colonne + ligne;
     }
 };
