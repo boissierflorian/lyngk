@@ -26,4 +26,8 @@ Lyngk.Coordinates = function (c, l) {
 
         return true;
     };
+
+    this.getRepresentation = function() {
+        return colonne + ligne;
+    }
 };
