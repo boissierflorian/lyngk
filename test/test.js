@@ -63,3 +63,14 @@ LyngkTestCase.prototype.testStory7 = function() {
 
     assertTrue(intersection.getState() === Lyngk.State.VACANT);
 };
+
+LyngkTestCase.prototype.testStory8 = function() {
+    var coordinates = new Lyngk.Coordinates("C", 2);
+    var intersection = new Lyngk.Intersection(coordinates);
+    var piece = new Lyngk.Piece(Lyngk.Color.BLUE);
+
+    intersection.poserPiece(piece);
+
+    assertTrue(intersection.getState() === Lyngk.State.ONE_PIECE);
+    assertTrue(intersection.getColor() === Lyngk.Color.BLUE);
+};
