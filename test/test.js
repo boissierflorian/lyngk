@@ -43,8 +43,16 @@ LyngkTestCase.prototype.testStory5 = function() {
 };
 
 LyngkTestCase.prototype.testStory6 = function() {
-    var coordinates = new Lyngk.Coordinates("B", 4);
-    var coordinates2 = new Lyngk.Coordinates("C", 5);
+    var hashCodes = [];
+    var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
 
-    assertTrue(coordinates.hash() !== coordinates2.hash());
+    for (var ligne = 1; ligne < 10; ligne++) {
+        for (var i = 0; i < letters.length; i++) {
+            var coordinates = new Lyngk.Coordinates(letters[i], ligne);
+            var hash = coordinates.hash();
+            
+            assertTrue(hashCodes.indexOf(hash) === -1);
+            hashCodes.push(hash);
+        }
+    }
 };
