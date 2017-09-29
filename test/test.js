@@ -21,6 +21,11 @@ LyngkTestCase.prototype.testStory2 = function() {
             }
         }
     }
-    
+
     assertTrue(validCoordinates === 43);
+};
+
+LyngkTestCase.prototype.testStory3 = function() {
+    var coordinates = new Lyngk.Coordinates("A", 3);
+    assertTrue(coordinates.getRepresentation() === "A3");
 };
