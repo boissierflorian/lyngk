@@ -50,9 +50,16 @@ LyngkTestCase.prototype.testStory6 = function() {
         for (var i = 0; i < letters.length; i++) {
             var coordinates = new Lyngk.Coordinates(letters[i], ligne);
             var hash = coordinates.hash();
-            
+
             assertTrue(hashCodes.indexOf(hash) === -1);
             hashCodes.push(hash);
         }
     }
+};
+
+LyngkTestCase.prototype.testStory7 = function() {
+    var coordinates = new Lyngk.Coordinates("C", 2);
+    var intersection = new Lyngk.Intersection(coordinates);
+
+    assertTrue(intersection.getState() === Lyngk.State.VACANT);
 };
