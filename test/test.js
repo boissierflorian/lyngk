@@ -41,3 +41,10 @@ LyngkTestCase.prototype.testStory5 = function() {
 
     assertTrue(coordinates.getColonne() === copy.getColonne() && coordinates.getLigne() === copy.getLigne());
 };
+
+LyngkTestCase.prototype.testStory6 = function() {
+    var coordinates = new Lyngk.Coordinates("B", 4);
+    var coordinates2 = new Lyngk.Coordinates("C", 5);
+
+    assertTrue(coordinates.hash() !== coordinates2.hash());
+};
