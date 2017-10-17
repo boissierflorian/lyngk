@@ -89,3 +89,21 @@ LyngkTestCase.prototype.testStory9 = function() {
 
     assertTrue(intersection.getState() === Lyngk.State.STACK);
 };
+
+LyngkTestCase.prototype.testStory10 = function() {
+    var coordinates = new Lyngk.Coordinates("C", 2);
+    var intersection = new Lyngk.Intersection(coordinates);
+    var bluePiece = new Lyngk.Piece(Lyngk.Color.BLUE);
+    var redPiece = new Lyngk.Piece(Lyngk.Color.RED);
+    var greenPiece = new Lyngk.Piece(Lyngk.Color.GREEN);
+    var ivoryPiece = new Lyngk.Piece(Lyngk.Color.IVORY);
+    var whitePiece = new Lyngk.Piece(Lyngk.Color.WHITE);
+
+    intersection.poserPiece(bluePiece);
+    intersection.poserPiece(redPiece);
+    intersection.poserPiece(greenPiece);
+    intersection.poserPiece(ivoryPiece);
+    intersection.poserPiece(whitePiece);
+
+    assertTrue(intersection.getState() === Lyngk.State.FULL_STACK);
+};
