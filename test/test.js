@@ -117,6 +117,10 @@ LyngkTestCase.prototype.testStory11 = function() {
     for (var line = 1; line < 10; line++) {
         for (var i = 0; i < letters.length; i++) {
             var coordinate = new Lyngk.Coordinates(letters[i], line);
+
+            if (!coordinate.isValid())
+                continue;
+
             var found = false;
 
             for (var j = 0; j < intersections.length; j++) {
