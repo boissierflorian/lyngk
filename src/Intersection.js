@@ -29,6 +29,8 @@ Lyngk.Intersection = function (c) {
           state = Lyngk.State.ONE_PIECE;
         } else if (pieceCount === 2) {
             state = Lyngk.State.STACK;
+        } else if (pieceCount === 5) {
+            state = Lyngk.State.FULL_STACK;
         }
     };
 };
