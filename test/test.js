@@ -107,3 +107,29 @@ LyngkTestCase.prototype.testStory10 = function() {
 
     assertTrue(intersection.getState() === Lyngk.State.FULL_STACK);
 };
+
+LyngkTestCase.prototype.testStory11 = function() {
+    var engine = new Lyngk.Engine();
+    var intersections = engine.getIntersections();
+    var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+
+    // On s'assure que le plateau est entièrement rempli
+    for (var line = 1; line < 10; line++) {
+        for (var i = 0; i < letters.length; i++) {
+            var coordinate = new Lyngk.Coordinates(letters[i], line);
+            var found = false;
+
+            for (var j = 0; j < intersections.length; j++) {
+                if (intersections[j].getCoordinates().equals(coordinate)) {
+                    // On s'assure également que chaque intersection ne possède qu'une et
+                    // une seule pièce
+                    assertTrue(intersections[j].getState() === Lyngk.State.ONE_PIECE);
+                    found = true;
+                    break;
+                }
+            }
+
+            assertTrue(found);
+        }
+    }
+};
