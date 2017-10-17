@@ -133,3 +133,39 @@ LyngkTestCase.prototype.testStory11 = function() {
         }
     }
 };
+
+LyngkTestCase.prototype.testStory12 = function() {
+    var engine = new Lyngk.Engine();
+    var intersections = engine.getIntersections();
+
+    var whiteCount = 0;
+    var redCount = 0;
+    var blueCount = 0;
+    var greenCount = 0;
+    var ivoryCount = 0;
+    var blackCount = 0;
+
+    for (var i = 0; i < intersections.length; i++) {
+        var color = intersections[i].getColor();
+
+        if (color === Lyngk.Color.WHITE)
+            whiteCount++;
+        else if (color === Lyngk.Color.GREEN)
+            greenCount++;
+        else if (color === Lyngk.Color.BLUE)
+            blueCount++;
+        else if (color === Lyngk.Color.BLACK)
+            blackCount++;
+        else if (color === Lyngk.Color.IVORY)
+            ivoryCount++;
+        else if (color === Lyngk.Color.RED)
+            redCount++;
+    }
+
+    assertEquals(3, whiteCount);
+    assertEquals(5, redCount);
+    assertEquals(5, blueCount);
+    assertEquals(5, greenCount);
+    assertEquals(5, ivoryCount);
+    assertEquals(5, blackCount);
+};
