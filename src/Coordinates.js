@@ -50,4 +50,8 @@ Lyngk.Coordinates = function (c, l) {
     this.hash = function() {
         return colonne.charCodeAt(0) + ligne * (4 * ligne) - 7;
     };
+
+    this.equals = function(coordinate) {
+        return colonne === coordinate.getColonne() && ligne === coordinate.getLigne();
+    }
 };

@@ -33,4 +33,8 @@ Lyngk.Intersection = function (c) {
             state = Lyngk.State.FULL_STACK;
         }
     };
+
+    this.getCoordinates = function() {
+        return coordinates;
+    };
 };
