@@ -163,9 +163,9 @@ LyngkTestCase.prototype.testStory12 = function() {
     }
 
     assertEquals(3, whiteCount);
-    assertEquals(5, redCount);
-    assertEquals(5, blueCount);
-    assertEquals(5, greenCount);
-    assertEquals(5, ivoryCount);
-    assertEquals(5, blackCount);
+    assertEquals(8, redCount);
+    assertEquals(8, blueCount);
+    assertEquals(8, greenCount);
+    assertEquals(8, ivoryCount);
+    assertEquals(8, blackCount);
 };
