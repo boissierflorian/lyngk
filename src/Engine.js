@@ -81,6 +81,21 @@ Lyngk.Engine = function () {
         return null;
     };
 
+    this.movePiecesFromTo = function(source, dest) {
+        var interSource = this.getIntersectionAt(source);
+        var interDest = this.getIntersectionAt(dest);
+
+        if (interSource === null || interSource === undefined ||
+            interDest === null || interDest === undefined)
+            return false;
+
+        var pieces = interSource.stripPieces();
+        if (pieces === null) return false;
+
+        interDest.placePieces(pieces);
+        return true;
+    };
+
 
     this.getIntersections = function() {
       return intersections;

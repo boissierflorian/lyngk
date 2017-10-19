@@ -23,11 +23,25 @@ Lyngk.Intersection = function (c) {
       return piece;
     };
 
+    this.stripPieces = function() {
+        var pieces = stack.strip();
+        this.updateState();
+        return pieces;
+    };
+
     this.getColor = function() {
         var headPiece = stack.getHead();
 
         if (headPiece !== null && headPiece !== undefined)
           return headPiece.getColor();
+    };
+
+    this.placePieces = function(arrayPieces) {
+        for (var i = 0; i < arrayPieces.length; i++) {
+            stack.pushPiece(arrayPieces[i]);
+        }
+
+        this.updateState();
     };
 
     this.updateState = function() {

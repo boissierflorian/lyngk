@@ -25,4 +25,11 @@ Lyngk.Stack = function() {
         pieces.splice(pieces.length - 1, 1);
         return piece;
     };
+
+    this.strip = function() {
+        if (pieces.length === 0)
+            return null;
+
+        return pieces.splice(0, pieces.length);
+    };
 };
