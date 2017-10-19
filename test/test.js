@@ -207,3 +207,20 @@ LyngkTestCase.prototype.testStory14 = function () {
             assertEquals(4, intersections[i].getStack().getHeight());
     }
 };
+
+LyngkTestCase.prototype.testStory15 = function() {
+    var engine = new Lyngk.Engine();
+
+    var piece = engine.takeOffPiece(new Lyngk.Coordinates("A", 3));
+    assertTrue(piece !== null && piece !== undefined);
+
+    engine.placePiece(piece, new Lyngk.Coordinates("B", 3));
+
+    var interB3 = engine.getIntersectionAt(new Lyngk.Coordinates("B", 3));
+    assertTrue(interB3 !== null && interB3 !== undefined);
+    assertTrue(interB3.getColor() === piece.getColor());
+
+    var interA3 = engine.getIntersectionAt(new Lyngk.Coordinates("A", 3));
+    assertTrue(interA3 !== null && interA3 !== undefined);
+    assertTrue(interA3.getState() === Lyngk.State.VACANT && interA3.getStack().getHeight() === 0);
+};
