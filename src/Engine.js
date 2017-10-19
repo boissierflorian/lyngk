@@ -49,6 +49,38 @@ Lyngk.Engine = function () {
         _fillBoard();
     };
 
+    this.takeOffPiece = function(coordinates) {
+        if (!coordinates.isValid()) return null;
+
+        var intersection = this.getIntersectionAt(coordinates);
+        if (intersection === null) return null;
+
+        return intersection.takeOffPiece();
+    };
+
+    this.placePiece = function(piece, coordinates) {
+        if (!coordinates.isValid()) return false;
+
+        var intersection = this.getIntersectionAt(coordinates);
+        if (intersection === null) return false;
+
+        intersection.poserPiece(piece);
+        return true;
+    };
+
+    this.getIntersectionAt = function(coordinates) {
+        if (!coordinates.isValid())
+            return null;
+
+        for (var i = 0; i < intersections.length; i++) {
+            if (intersections[i].getCoordinates().equals(coordinates)) {
+                return intersections[i];
+            }
+        }
+
+        return null;
+    };
+
 
     this.getIntersections = function() {
       return intersections;

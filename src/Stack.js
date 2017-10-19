@@ -17,4 +17,12 @@ Lyngk.Stack = function() {
 
         return null;
     };
+
+    this.pop = function() {
+        var piece = this.getHead();
+        if (piece === null) return null;
+
+        pieces.splice(pieces.length - 1, 1);
+        return piece;
+    };
 };

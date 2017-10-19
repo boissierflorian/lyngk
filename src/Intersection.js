@@ -16,6 +16,13 @@ Lyngk.Intersection = function (c) {
         this.updateState();
     };
 
+    this.takeOffPiece = function() {
+      var piece = stack.pop();
+      this.updateState();
+
+      return piece;
+    };
+
     this.getColor = function() {
         var headPiece = stack.getHead();
 
@@ -32,6 +39,8 @@ Lyngk.Intersection = function (c) {
             state = Lyngk.State.STACK;
         } else if (pieceCount === 5) {
             state = Lyngk.State.FULL_STACK;
+        } else if (pieceCount === 0) {
+            state = Lyngk.State.VACANT;
         }
     };
 
