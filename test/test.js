@@ -182,3 +182,28 @@ LyngkTestCase.prototype.testStory13 = function () {
         assertEquals(1, intersections[i].getStack().getHeight());
     }
 };
+
+LyngkTestCase.prototype.testStory14 = function () {
+    var engine = new Lyngk.Engine();
+    var intersections = engine.getIntersections();
+
+    intersections[0].poserPiece(new Lyngk.Piece(Lyngk.Color.IVORY));
+    intersections[1].poserPiece(new Lyngk.Piece(Lyngk.Color.IVORY));
+    intersections[2].poserPiece(new Lyngk.Piece(Lyngk.Color.IVORY));
+
+
+    for (var i = 0; i < intersections.length; i++) {
+        assertTrue(intersections[i].getStack().getHeight() >= 1);
+
+        intersections[i].poserPiece(new Lyngk.Piece(Lyngk.Color.WHITE));
+        assertTrue(intersections[i].getColor() === Lyngk.Color.WHITE);
+
+        intersections[i].poserPiece(new Lyngk.Piece(Lyngk.Color.RED));
+        assertTrue(intersections[i].getColor() === Lyngk.Color.RED);
+
+        if (i > 2)
+            assertEquals(3, intersections[i].getStack().getHeight());
+        else
+            assertEquals(4, intersections[i].getStack().getHeight());
+    }
+};
