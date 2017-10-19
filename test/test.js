@@ -224,3 +224,19 @@ LyngkTestCase.prototype.testStory15 = function() {
     assertTrue(interA3 !== null && interA3 !== undefined);
     assertTrue(interA3.getState() === Lyngk.State.VACANT && interA3.getStack().getHeight() === 0);
 };
+
+LyngkTestCase.prototype.testStory16 = function() {
+    var engine = new Lyngk.Engine();
+    engine.placePiece(new Lyngk.Piece(Lyngk.Color.GREEN), new Lyngk.Coordinates("B", 3));
+
+    var interB3 = engine.getIntersectionAt(new Lyngk.Coordinates("B", 3));
+    var colorB3 = interB3.getColor();
+    var interB2 = engine.getIntersectionAt(new Lyngk.Coordinates("B", 2));
+
+    assertEquals(1, interB2.getStack().getHeight());
+    engine.movePiecesFromTo(new Lyngk.Coordinates("B", 3), new Lyngk.Coordinates("B", 2));
+    assertEquals(3, interB2.getStack().getHeight());
+
+    assertEquals(colorB3, interB2.getColor());
+    assertTrue(interB3.getStack().getHeight() === 0 && interB3.getState() === Lyngk.State.VACANT);
+};
