@@ -173,3 +173,12 @@ LyngkTestCase.prototype.testStory12 = function() {
     assertEquals(8, ivoryCount);
     assertEquals(8, blackCount);
 };
+
+LyngkTestCase.prototype.testStory13 = function () {
+    var engine = new Lyngk.Engine();
+    var intersections = engine.getIntersections();
+
+    for (var i = 0; i < intersections.length; i++) {
+        assertEquals(1, intersections[i].getStack().getHeight());
+    }
+};
