@@ -240,3 +240,11 @@ LyngkTestCase.prototype.testStory16 = function() {
     assertEquals(colorB3, interB2.getColor());
     assertTrue(interB3.getStack().getHeight() === 0 && interB3.getState() === Lyngk.State.VACANT);
 };
+
+LyngkTestCase.prototype.testStory17 = function() {
+    var engine = new Lyngk.Engine();
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("B", 2), new Lyngk.Coordinates("B", 3)));
+    assertFalse(engine.movePiecesFromTo(new Lyngk.Coordinates("B", 3), new Lyngk.Coordinates("B", 2)));
+    assertEquals(Lyngk.State.STACK, engine.getIntersectionAt(new Lyngk.Coordinates("B", 3)).getState());
+    assertEquals(Lyngk.State.VACANT, engine.getIntersectionAt(new Lyngk.Coordinates("B", 2)).getState());
+};
