@@ -82,7 +82,8 @@ Lyngk.Engine = function () {
     };
 
     this._isValidMove = function(source, dest) {
-        if (source.getState() === Lyngk.State.VACANT || dest.getState() === Lyngk.State.VACANT)
+        if (source.getState() === Lyngk.State.VACANT || dest.getState() === Lyngk.State.VACANT ||
+            source.getState() === Lyngk.State.FULL_STACK || dest.getState() === Lyngk.State.FULL_STACK)
             return false;
 
         var sourceCol = source.getCoordinates().getColonne();
