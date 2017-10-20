@@ -259,7 +259,7 @@ LyngkTestCase.prototype.testStory18 = function() {
 
 LyngkTestCase.prototype.testStory19 = function() {
     var engine = new Lyngk.Engine();
-    
+
     assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("I", 7), new Lyngk.Coordinates("H", 6)));
     assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("H", 6), new Lyngk.Coordinates("H", 5)));
     assertFalse(engine.movePiecesFromTo(new Lyngk.Coordinates("H", 5), new Lyngk.Coordinates("H", 8)));
@@ -270,4 +270,17 @@ LyngkTestCase.prototype.testStory19 = function() {
     assertEquals(Lyngk.State.ONE_PIECE, engine.getIntersectionAt(new Lyngk.Coordinates("H", 8)).getState());
     assertEquals(Lyngk.State.ONE_PIECE, engine.getIntersectionAt(new Lyngk.Coordinates("F", 3)).getState());
     assertEquals(Lyngk.State.ONE_PIECE, engine.getIntersectionAt(new Lyngk.Coordinates("F", 5)).getState());
+};
+
+LyngkTestCase.prototype.testStory20 = function() {
+    var engine = new Lyngk.Engine();
+
+    engine.placePiece(new Lyngk.Piece(Lyngk.Color.WHITE), new Lyngk.Coordinates("B", 2));
+    engine.placePiece(new Lyngk.Piece(Lyngk.Color.RED), new Lyngk.Coordinates("B", 2));
+
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("B", 2), new Lyngk.Coordinates("C", 2)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("C", 2), new Lyngk.Coordinates("D", 2)));
+
+    assertEquals(5, engine.getIntersectionAt(new Lyngk.Coordinates("D", 2)).getStack().getHeight());
+    assertFalse(engine.movePiecesFromTo(new Lyngk.Coordinates("D", 2), new Lyngk.Coordinates("E", 2)));
 };
