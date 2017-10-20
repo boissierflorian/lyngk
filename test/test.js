@@ -294,3 +294,16 @@ LyngkTestCase.prototype.testStory21 = function() {
     assertEquals(Lyngk.State.STACK, engine.getIntersectionAt(new Lyngk.Coordinates("B", 3)).getState());
     assertEquals(Lyngk.State.ONE_PIECE, engine.getIntersectionAt(new Lyngk.Coordinates("C", 3)).getState());
 };
+
+LyngkTestCase.prototype.testStory22 = function() {
+    var engine = new Lyngk.Engine();
+
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("I", 7), new Lyngk.Coordinates("H", 6)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("G", 4), new Lyngk.Coordinates("G", 5)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("G", 5), new Lyngk.Coordinates("G", 6)));
+
+    assertFalse(engine.movePiecesFromTo(new Lyngk.Coordinates("H", 6), new Lyngk.Coordinates("G", 6)));
+
+    assertEquals(2, engine.getIntersectionAt(new Lyngk.Coordinates("H", 6)).getStack().getHeight());
+    assertEquals(3, engine.getIntersectionAt(new Lyngk.Coordinates("G", 6)).getStack().getHeight());
+};
