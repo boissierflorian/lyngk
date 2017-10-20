@@ -87,6 +87,9 @@ Lyngk.Engine = function () {
             (source.getState() === Lyngk.State.ONE_PIECE && dest.getState() > Lyngk.State.ONE_PIECE))
             return false;
 
+        if ((source.getStack().getHeight() < dest.getStack().getHeight()))
+            return false;
+
         var sourceCol = source.getCoordinates().getColonne();
         var sourceLine = source.getCoordinates().getLigne();
         var moves = [];
