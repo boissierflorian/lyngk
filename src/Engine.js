@@ -81,6 +81,34 @@ Lyngk.Engine = function () {
         return null;
     };
 
+    this._isValidMove = function(source, dest) {
+        if (source.getState() === Lyngk.State.VACANT || dest.getState() === Lyngk.State.VACANT)
+            return false;
+
+        var sourceCol = source.getCoordinates().getColonne();
+        var sourceLine = source.getCoordinates().getLigne();
+        var moves = [];
+
+        // top
+        moves.push(new Lyngk.Coordinates(sourceCol, sourceLine + 1));
+        // bottom
+        moves.push(new Lyngk.Coordinates(sourceCol, sourceLine - 1));
+        // top left
+        moves.push(new Lyngk.Coordinates(String.fromCharCode(sourceCol.charCodeAt(0) - 1), sourceLine));
+        // top right
+        moves.push(new Lyngk.Coordinates(String.fromCharCode(sourceCol.charCodeAt(0) + 1), sourceLine + 1));
+        // bottom left
+        moves.push(new Lyngk.Coordinates(String.fromCharCode(sourceCol.charCodeAt(0) - 1), sourceLine - 1));
+        // bottom right
+        moves.push(new Lyngk.Coordinates(String.fromCharCode(sourceCol.charCodeAt(0) + 1), sourceLine));
+
+        for (var i = 0; i < moves.length; i++) {
+            if (moves[i].equals(dest.getCoordinates()) && moves[i].isValid()) return true;
+        }
+
+        return false;
+    };
+
     this.movePiecesFromTo = function(source, dest) {
         var interSource = this.getIntersectionAt(source);
         var interDest = this.getIntersectionAt(dest);
@@ -89,13 +117,9 @@ Lyngk.Engine = function () {
             interDest === null || interDest === undefined)
             return false;
 
-        if (interDest.getState() === Lyngk.State.VACANT)
-            return false;
+        if (!this._isValidMove(interSource, interDest)) return false;
 
-        var pieces = interSource.stripPieces();
-        if (pieces === null) return false;
-
-        interDest.placePieces(pieces);
+        interDest.placePieces(interSource.stripPieces());
         return true;
     };
 
