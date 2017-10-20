@@ -89,6 +89,9 @@ Lyngk.Engine = function () {
             interDest === null || interDest === undefined)
             return false;
 
+        if (interDest.getState() === Lyngk.State.VACANT)
+            return false;
+
         var pieces = interSource.stripPieces();
         if (pieces === null) return false;
 
