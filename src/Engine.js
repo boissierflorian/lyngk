@@ -7,6 +7,8 @@ Lyngk.Player = {PLAYER_ONE : 0, PLAYER_TWO : 1};
 Lyngk.Engine = function () {
     var intersections = [];
     var currentPlayer = Lyngk.Player.PLAYER_ONE;
+    var playerOneColors = [];
+    var playerTwoColors = [];
 
     var _getRandom = function(max) {
         return Math.floor(Math.random() * max);
@@ -136,6 +138,28 @@ Lyngk.Engine = function () {
         else currentPlayer = Lyngk.Player.PLAYER_ONE;
 
         interDest.placePieces(interSource.stripPieces());
+        return true;
+    };
+
+    this.claim = function(player, color) {
+        if (currentPlayer !== player)
+            return false;
+
+        if (player === Lyngk.Player.PLAYER_ONE) {
+            if (playerOneColors.length === 2)
+                return false;
+
+            if (playerOneColors.indexOf(color) !== -1 || playerTwoColors.indexOf(color) !== -1)
+                return false;
+
+        } else {
+            if (playerTwoColors.length === 2)
+                return false;
+
+            if (playerOneColors.indexOf(color) !== -1 || playerTwoColors.indexOf(color) !== -1)
+                return false;
+        }
+
         return true;
     };
 
