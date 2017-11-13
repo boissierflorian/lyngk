@@ -334,3 +334,10 @@ LyngkTestCase.prototype.testStory24 = function() {
     var engine = new Lyngk.Engine();
     assertEquals(engine.getCurrentPlayer(), Lyngk.Player.PLAYER_ONE);
 };
+
+LyngkTestCase.prototype.testStory25 = function() {
+    var engine = new Lyngk.Engine();
+    assertEquals(engine.getCurrentPlayer(), Lyngk.Player.PLAYER_ONE);
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("B", 3), new Lyngk.Coordinates("C", 3)));
+    assertEquals(engine.getCurrentPlayer(), Lyngk.Player.PLAYER_TWO);
+};
