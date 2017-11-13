@@ -32,4 +32,18 @@ Lyngk.Stack = function() {
 
         return pieces.splice(0, pieces.length);
     };
+
+    this.containsColor = function(color) {
+        for (var i = 0; i < pieces.length; i++) {
+            var piece = pieces[i];
+            if (piece.getColor() === color)
+                return true;
+        }
+
+        return false;
+    };
+
+    this.getPieces = function() {
+        return pieces;
+    }
 };

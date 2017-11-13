@@ -90,6 +90,13 @@ Lyngk.Engine = function () {
         if ((source.getStack().getHeight() < dest.getStack().getHeight()))
             return false;
 
+        var sourceStack = source.getStack();
+        for (i = 0; i < sourceStack.getPieces().length; i++) {
+            if (dest.getStack().containsColor(sourceStack.getPieces()[i].getColor()) &&
+                sourceStack.getPieces()[i].getColor() !== Lyngk.Color.WHITE)
+                return false;
+        }
+
         var sourceCol = source.getCoordinates().getColonne();
         var sourceLine = source.getCoordinates().getLigne();
         var moves = [];

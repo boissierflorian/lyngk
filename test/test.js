@@ -321,7 +321,7 @@ LyngkTestCase.prototype.testStory23 = function() {
     assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("D", 2), new Lyngk.Coordinates("E", 3)));
     assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("E", 3), new Lyngk.Coordinates("F", 4)));
     assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("F", 4), new Lyngk.Coordinates("G", 5)));
-    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("G", 5), new Lyngk.Coordinates("H", 6)));
+    assertFalse(engine.movePiecesFromTo(new Lyngk.Coordinates("G", 5), new Lyngk.Coordinates("H", 6)));
 
     assertTrue(engine.getIntersectionAt(new Lyngk.Coordinates("H", 6)).getStack().getHeight() < 5);
 };
