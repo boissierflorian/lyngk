@@ -341,3 +341,11 @@ LyngkTestCase.prototype.testStory25 = function() {
     assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("B", 3), new Lyngk.Coordinates("C", 3)));
     assertEquals(engine.getCurrentPlayer(), Lyngk.Player.PLAYER_TWO);
 };
+
+LyngkTestCase.prototype.testStory26 = function() {
+    var engine = new Lyngk.Engine();
+    assertTrue(engine.claim(Lyngk.Player.PLAYER_ONE, Lyngk.Color.RED));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("A", 3), new Lyngk.Coordinates("B", 3)));
+    assertFalse(engine.claim(Lyngk.Player.PLAYER_ONE, Lyngk.Color.RED));
+    assertTrue(engine.claim(Lyngk.Player.PLAYER_TWO, Lyngk.Color.GREEN));
+};
