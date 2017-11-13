@@ -329,3 +329,8 @@ LyngkTestCase.prototype.testStory23 = function() {
 
     assertTrue(engine.getIntersectionAt(new Lyngk.Coordinates("E", 3)).getStack().getHeight() < 5);
 };
+
+LyngkTestCase.prototype.testStory24 = function() {
+    var engine = new Lyngk.Engine();
+    assertEquals(engine.getCurrentPlayer(), Lyngk.Player.PLAYER_ONE);
+};
