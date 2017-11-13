@@ -132,6 +132,8 @@ Lyngk.Engine = function () {
             return false;
 
         if (!this._isValidMove(interSource, interDest)) return false;
+        if (currentPlayer === Lyngk.Player.PLAYER_ONE) currentPlayer = Lyngk.Player.PLAYER_TWO;
+        else currentPlayer = Lyngk.Player.PLAYER_ONE;
 
         interDest.placePieces(interSource.stripPieces());
         return true;
