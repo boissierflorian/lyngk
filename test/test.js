@@ -307,3 +307,21 @@ LyngkTestCase.prototype.testStory22 = function() {
     assertEquals(2, engine.getIntersectionAt(new Lyngk.Coordinates("H", 6)).getStack().getHeight());
     assertEquals(3, engine.getIntersectionAt(new Lyngk.Coordinates("G", 6)).getStack().getHeight());
 };
+
+LyngkTestCase.prototype.testStory23 = function() {
+    Math.seedrandom("isidisi2l");
+    var engine = new Lyngk.Engine();
+
+    assertEquals(Lyngk.Color.WHITE, engine.getIntersectionAt(new Lyngk.Coordinates("D", 2)).getColor());
+    assertEquals(Lyngk.Color.IVORY, engine.getIntersectionAt(new Lyngk.Coordinates("E",3)).getColor());
+    assertEquals(Lyngk.Color.RED, engine.getIntersectionAt(new Lyngk.Coordinates("F", 4)).getColor());
+    assertEquals(Lyngk.Color.WHITE, engine.getIntersectionAt(new Lyngk.Coordinates("G", 5)).getColor());
+    assertEquals(Lyngk.Color.RED, engine.getIntersectionAt(new Lyngk.Coordinates("H", 6)).getColor());
+
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("D", 2), new Lyngk.Coordinates("E", 3)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("E", 3), new Lyngk.Coordinates("F", 4)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("F", 4), new Lyngk.Coordinates("G", 5)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("G", 5), new Lyngk.Coordinates("H", 6)));
+
+    assertTrue(engine.getIntersectionAt(new Lyngk.Coordinates("H", 6)).getStack().getHeight() < 5);
+};
