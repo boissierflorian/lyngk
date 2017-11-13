@@ -9,6 +9,8 @@ Lyngk.Engine = function () {
     var currentPlayer = Lyngk.Player.PLAYER_ONE;
     var playerOneColors = [];
     var playerTwoColors = [];
+    var playerOnePoints = 0;
+    var playerTwoPoints = 0;
 
     var _getRandom = function(max) {
         return Math.floor(Math.random() * max);
@@ -134,10 +136,32 @@ Lyngk.Engine = function () {
             return false;
 
         if (!this._isValidMove(interSource, interDest)) return false;
+
+        interDest.placePieces(interSource.stripPieces());
+
+        if (interDest.getState() === Lyngk.State.FULL_STACK) {
+            if (currentPlayer === Lyngk.Player.PLAYER_ONE) {
+                for (var i = 0; i < playerOneColors.length; i++) {
+                    if (interDest.getColor() === playerOneColors[i]) {
+                        playerOnePoints++;
+                        interDest.stripPieces();
+                        break;
+                    }
+                }
+            } else {
+                for (i = 0; i < playerTwoColors.length; i++) {
+                    if (interDest.getColor() === playerTwoColors[i]) {
+                        playerTwoPoints++;
+                        interDest.stripPieces();
+                        break;
+                    }
+                }
+            }
+        }
+
         if (currentPlayer === Lyngk.Player.PLAYER_ONE) currentPlayer = Lyngk.Player.PLAYER_TWO;
         else currentPlayer = Lyngk.Player.PLAYER_ONE;
 
-        interDest.placePieces(interSource.stripPieces());
         return true;
     };
 
@@ -152,12 +176,15 @@ Lyngk.Engine = function () {
             if (playerOneColors.indexOf(color) !== -1 || playerTwoColors.indexOf(color) !== -1)
                 return false;
 
+            playerOneColors.push(color);
         } else {
             if (playerTwoColors.length === 2)
                 return false;
 
             if (playerOneColors.indexOf(color) !== -1 || playerTwoColors.indexOf(color) !== -1)
                 return false;
+
+            playerTwoColors.push(color);
         }
 
         return true;
@@ -165,11 +192,27 @@ Lyngk.Engine = function () {
 
 
     this.getIntersections = function() {
-      return intersections;
+        return intersections;
     };
 
     this.getCurrentPlayer = function() {
         return currentPlayer;
+    };
+
+    this.getPlayerPoints = function(player) {
+        if (player === Lyngk.Player.PLAYER_ONE)
+            return playerOnePoints;
+
+        return playerTwoPoints;
+    };
+
+    this.getPiecesLeft = function() {
+        var count = 0;
+
+        for (var i = 0; i < intersections.length; i++)
+            count += intersections[i].getStack().getHeight();
+
+        return count;
     };
 
     init();
