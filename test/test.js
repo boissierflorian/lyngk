@@ -349,3 +349,19 @@ LyngkTestCase.prototype.testStory26 = function() {
     assertFalse(engine.claim(Lyngk.Player.PLAYER_ONE, Lyngk.Color.RED));
     assertTrue(engine.claim(Lyngk.Player.PLAYER_TWO, Lyngk.Color.GREEN));
 };
+
+LyngkTestCase.prototype.testStory27 = function() {
+    var engine = new Lyngk.Engine();
+    assertTrue(engine.claim(Lyngk.Player.PLAYER_ONE, Lyngk.Color.WHITE));
+
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("B", 5), new Lyngk.Coordinates("C", 5)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("G", 5), new Lyngk.Coordinates("G", 6)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("C", 5), new Lyngk.Coordinates("B", 4)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("G", 3), new Lyngk.Coordinates("F", 3)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("B", 4), new Lyngk.Coordinates("A", 3)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("E", 7), new Lyngk.Coordinates("E", 8)));
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("A", 3), new Lyngk.Coordinates("B", 3)));
+
+    assertEquals(engine.getPlayerPoints(Lyngk.Player.PLAYER_ONE), 1);
+    assertEquals(engine.getPiecesLeft(), 38);
+};
