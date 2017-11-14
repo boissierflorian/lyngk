@@ -12,23 +12,25 @@ Lyngk.Stack = function() {
     };
 
     this.getHead = function() {
-        if (pieces.length > 0)
+        if (pieces.length > 0) {
             return pieces[pieces.length - 1];
+        }
 
         return null;
     };
 
     this.pop = function() {
         var piece = this.getHead();
-        if (piece === null) return null;
+        if (piece === null) { return null; }
 
         pieces.splice(pieces.length - 1, 1);
         return piece;
     };
 
     this.strip = function() {
-        if (pieces.length === 0)
+        if (pieces.length === 0) {
             return null;
+        }
 
         return pieces.splice(0, pieces.length);
     };
@@ -36,8 +38,9 @@ Lyngk.Stack = function() {
     this.containsColor = function(color) {
         for (var i = 0; i < pieces.length; i++) {
             var piece = pieces[i];
-            if (piece.getColor() === color)
+            if (piece.getColor() === color) {
                 return true;
+            }
         }
 
         return false;
@@ -45,5 +48,5 @@ Lyngk.Stack = function() {
 
     this.getPieces = function() {
         return pieces;
-    }
+    };
 };

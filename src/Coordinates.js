@@ -20,23 +20,24 @@ Lyngk.Coordinates = function (c, l) {
         var coords = c + l;
 
         for (var i = 0; i < Lyngk.invalidCoordinates.length; i++) {
-            if (Lyngk.invalidCoordinates[i] === coords)
+            if (Lyngk.invalidCoordinates[i] === coords) {
                 return false;
+            }
         }
 
         return true;
     };
 
     this.getRepresentation = function() {
-        if (!this.isValid())
+        if (!this.isValid()) {
             return "invalid";
+        }
 
         return colonne + ligne;
     };
 
     this.clone = function() {
-        var copy = new Lyngk.Coordinates(colonne, ligne);
-        return copy;
+        return new Lyngk.Coordinates(colonne, ligne);
     };
 
     this.getColonne = function() {
@@ -52,6 +53,7 @@ Lyngk.Coordinates = function (c, l) {
     };
 
     this.equals = function(coordinate) {
-        return colonne === coordinate.getColonne() && ligne === coordinate.getLigne();
-    }
+        return colonne === coordinate.getColonne() &&
+            ligne === coordinate.getLigne();
+    };
 };

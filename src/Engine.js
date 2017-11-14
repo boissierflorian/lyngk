@@ -16,8 +16,7 @@ Lyngk.Engine = function () {
         return Math.floor(Math.random() * max);
     };
 
-    var _fillBoard = function() {
-        var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+    var _initPieces = function() {
         var pieces = [];
 
         for (var i = 0; i < 8; i++) {
@@ -27,25 +26,36 @@ Lyngk.Engine = function () {
             pieces.push(new Lyngk.Piece(Lyngk.Color.GREEN));
             pieces.push(new Lyngk.Piece(Lyngk.Color.IVORY));
 
-            if (i < 3)
+            if (i < 3) {
                 pieces.push(new Lyngk.Piece(Lyngk.Color.WHITE));
-
+            }
         }
+
+        return pieces;
+    };
+
+    var _addIntersection = function(coordinate, pieces) {
+        var intersection = new Lyngk.Intersection(coordinate);
+        var randomIndex = _getRandom(pieces.length);
+        var piece = pieces[randomIndex];
+
+        pieces.splice(randomIndex, 1);
+
+        intersection.poserPiece(piece);
+        intersections.push(intersection);
+    };
+
+    var _fillBoard = function() {
+        var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
+        var pieces = _initPieces();
 
         // Construction du plateau
         for (var line = 1; line < 10; line++) {
-            for (i = 0; i < letters.length; i++) {
+            for (var i = 0; i < letters.length; i++) {
                 var coordinate = new Lyngk.Coordinates(letters[i], line);
 
                 if (coordinate.isValid()) {
-                    var intersection = new Lyngk.Intersection(coordinate);
-                    var randomIndex = _getRandom(pieces.length);
-                    var piece = pieces[randomIndex];
-
-                    pieces.splice(randomIndex, 1);
-
-                    intersection.poserPiece(piece);
-                    intersections.push(intersection);
+                    _addIntersection(coordinate, pieces);
                 }
             }
         }
@@ -56,27 +66,36 @@ Lyngk.Engine = function () {
     };
 
     this.takeOffPiece = function(coordinates) {
-        if (!coordinates.isValid()) return null;
+        if (!coordinates.isValid()) {
+            return null;
+        }
 
         var intersection = this.getIntersectionAt(coordinates);
-        if (intersection === null) return null;
+        if (intersection === null) {
+            return null;
+        }
 
         return intersection.takeOffPiece();
     };
 
     this.placePiece = function(piece, coordinates) {
-        if (!coordinates.isValid()) return false;
+        if (!coordinates.isValid()) {
+            return false;
+        }
 
         var intersection = this.getIntersectionAt(coordinates);
-        if (intersection === null) return false;
+        if (intersection === null) {
+            return false;
+        }
 
         intersection.poserPiece(piece);
         return true;
     };
 
     this.getIntersectionAt = function(coordinates) {
-        if (!coordinates.isValid())
+        if (!coordinates.isValid()) {
             return null;
+        }
 
         for (var i = 0; i < intersections.length; i++) {
             if (intersections[i].getCoordinates().equals(coordinates)) {
@@ -87,22 +106,7 @@ Lyngk.Engine = function () {
         return null;
     };
 
-    this._isValidMove = function(source, dest) {
-        if (source.getState() === Lyngk.State.VACANT || dest.getState() === Lyngk.State.VACANT ||
-            source.getState() === Lyngk.State.FULL_STACK || dest.getState() === Lyngk.State.FULL_STACK ||
-            (source.getState() === Lyngk.State.ONE_PIECE && dest.getState() > Lyngk.State.ONE_PIECE))
-            return false;
-
-        if ((source.getStack().getHeight() < dest.getStack().getHeight()))
-            return false;
-
-        var sourceStack = source.getStack();
-        for (i = 0; i < sourceStack.getPieces().length; i++) {
-            if (dest.getStack().containsColor(sourceStack.getPieces()[i].getColor()) &&
-                sourceStack.getPieces()[i].getColor() !== Lyngk.Color.WHITE)
-                return false;
-        }
-
+    this._getValidMovesFrom = function(source) {
         var sourceCol = source.getCoordinates().getColonne();
         var sourceLine = source.getCoordinates().getLigne();
         var moves = [];
@@ -120,73 +124,119 @@ Lyngk.Engine = function () {
         // bottom right
         moves.push(new Lyngk.Coordinates(String.fromCharCode(sourceCol.charCodeAt(0) + 1), sourceLine));
 
+        return moves;
+    };
+
+    this._checkStatesForMove = function(source, dest) {
+        return !(source.getState() === Lyngk.State.VACANT || dest.getState() === Lyngk.State.VACANT ||
+            source.getState() === Lyngk.State.FULL_STACK || dest.getState() === Lyngk.State.FULL_STACK ||
+            (source.getState() === Lyngk.State.ONE_PIECE && dest.getState() > Lyngk.State.ONE_PIECE));
+    };
+
+    this._checkColorsForMove = function (source, dest) {
+        var sourceStack = source.getStack();
+
+        for (var i = 0; i < sourceStack.getPieces().length; i++) {
+            var sourceColor = sourceStack.getPieces()[i].getColor();
+            if (dest.getStack().containsColor(sourceColor) && sourceColor !==
+                Lyngk.Color.WHITE) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    this._canMoveTo = function(source, dest) {
+        var moves = this._getValidMovesFrom(source);
+
         for (var i = 0; i < moves.length; i++) {
-            if (moves[i].equals(dest.getCoordinates()) && moves[i].isValid()) return true;
+            if (moves[i].equals(dest.getCoordinates()) && moves[i].isValid()) {
+                return true;
+            }
         }
 
         return false;
+    };
+
+    this._checkHeightsForMove = function(source, dest) {
+        return source.getStack().getHeight() >= dest.getStack().getHeight();
+    };
+
+    this._isValidMove = function(source, dest) {
+        return this._checkStatesForMove(source, dest) && this._checkHeightsForMove(source, dest) &&
+            this._checkColorsForMove(source, dest) && this._canMoveTo(source, dest);
+    };
+
+    this._checkIntersectionsForMove = function(interSource, interDest) {
+        if (interSource === null || interSource === undefined ||
+            interDest === null || interDest === undefined) {
+            return false;
+        }
+
+        return this._isValidMove(interSource, interDest);
+    };
+
+    this._updateTurn = function(interDest) {
+        this._updatePoints(interDest);
+        this._nextPlayer();
+    };
+
+    this._updatePoints = function(interDest) {
+        if (interDest.getState() !== Lyngk.State.FULL_STACK) { return; }
+        var colors = (currentPlayer === Lyngk.Player.PLAYER_ONE ?
+            playerOneColors : playerTwoColors);
+
+        for (var i = 0; i < colors.length; i++) {
+            if (interDest.getColor() === colors[i]) {
+                if (currentPlayer === Lyngk.Player.PLAYER_ONE) {
+                    playerOnePoints++;
+                } else {
+                    playerTwoPoints++;
+                }
+                interDest.stripPieces();
+                break;
+            }
+        }
+    };
+
+    this._nextPlayer = function() {
+        if (currentPlayer === Lyngk.Player.PLAYER_ONE) {
+            currentPlayer = Lyngk.Player.PLAYER_TWO;
+        }
+        else {
+            currentPlayer = Lyngk.Player.PLAYER_ONE;
+        }
     };
 
     this.movePiecesFromTo = function(source, dest) {
         var interSource = this.getIntersectionAt(source);
         var interDest = this.getIntersectionAt(dest);
 
-        if (interSource === null || interSource === undefined ||
-            interDest === null || interDest === undefined)
+        if (!this._checkIntersectionsForMove(interSource, interDest)) {
             return false;
-
-        if (!this._isValidMove(interSource, interDest)) return false;
-
-        interDest.placePieces(interSource.stripPieces());
-
-        if (interDest.getState() === Lyngk.State.FULL_STACK) {
-            if (currentPlayer === Lyngk.Player.PLAYER_ONE) {
-                for (var i = 0; i < playerOneColors.length; i++) {
-                    if (interDest.getColor() === playerOneColors[i]) {
-                        playerOnePoints++;
-                        interDest.stripPieces();
-                        break;
-                    }
-                }
-            } else {
-                for (i = 0; i < playerTwoColors.length; i++) {
-                    if (interDest.getColor() === playerTwoColors[i]) {
-                        playerTwoPoints++;
-                        interDest.stripPieces();
-                        break;
-                    }
-                }
-            }
         }
 
-        if (currentPlayer === Lyngk.Player.PLAYER_ONE) currentPlayer = Lyngk.Player.PLAYER_TWO;
-        else currentPlayer = Lyngk.Player.PLAYER_ONE;
+        interDest.placePieces(interSource.stripPieces());
+        this._updateTurn(interDest);
 
         return true;
     };
 
     this.claim = function(player, color) {
-        if (currentPlayer !== player)
+        if (currentPlayer !== player) { return false; }
+
+        var colors = currentPlayer === Lyngk.Player.PLAYER_ONE ?
+            playerOneColors : playerTwoColors;
+        var otherColors = currentPlayer === Lyngk.Player.PLAYER_ONE ?
+            playerTwoColors : playerOneColors;
+
+        if (colors.length === 2 || colors.indexOf(color) !== -1 ||
+            otherColors.indexOf(color) !== -1){
             return false;
-
-        if (player === Lyngk.Player.PLAYER_ONE) {
-            if (playerOneColors.length === 2)
-                return false;
-
-            if (playerOneColors.indexOf(color) !== -1 || playerTwoColors.indexOf(color) !== -1)
-                return false;
-
-            playerOneColors.push(color);
-        } else {
-            if (playerTwoColors.length === 2)
-                return false;
-
-            if (playerOneColors.indexOf(color) !== -1 || playerTwoColors.indexOf(color) !== -1)
-                return false;
-
-            playerTwoColors.push(color);
         }
 
+        colors.push(color);
         return true;
     };
 
@@ -200,8 +250,9 @@ Lyngk.Engine = function () {
     };
 
     this.getPlayerPoints = function(player) {
-        if (player === Lyngk.Player.PLAYER_ONE)
+        if (player === Lyngk.Player.PLAYER_ONE) {
             return playerOnePoints;
+        }
 
         return playerTwoPoints;
     };
@@ -209,8 +260,9 @@ Lyngk.Engine = function () {
     this.getPiecesLeft = function() {
         var count = 0;
 
-        for (var i = 0; i < intersections.length; i++)
+        for (var i = 0; i < intersections.length; i++) {
             count += intersections[i].getStack().getHeight();
+        }
 
         return count;
     };

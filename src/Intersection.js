@@ -1,42 +1,51 @@
 "use strict";
 
 Lyngk.State = {VACANT: 0, ONE_PIECE: 1, STACK: 2, FULL_STACK: 3};
+Lyngk.StateRange = {};
+Lyngk.StateRange[0] = Lyngk.State.VACANT;
+Lyngk.StateRange[1] = Lyngk.State.ONE_PIECE;
+Lyngk.StateRange[2] = Lyngk.State.STACK;
+Lyngk.StateRange[3] = Lyngk.State.STACK;
+Lyngk.StateRange[4] = Lyngk.State.STACK;
+Lyngk.StateRange[5] = Lyngk.State.FULL_STACK;
+
 
 Lyngk.Intersection = function (c) {
     var state = Lyngk.State.VACANT;
     var coordinates = c;
     var stack = new Lyngk.Stack();
 
-    this.getState = function() {
+    this.getState = function () {
         return state;
     };
 
-    this.poserPiece = function(p) {
+    this.poserPiece = function (p) {
         stack.pushPiece(p);
         this.updateState();
     };
 
-    this.takeOffPiece = function() {
-      var piece = stack.pop();
-      this.updateState();
+    this.takeOffPiece = function () {
+        var piece = stack.pop();
+        this.updateState();
 
-      return piece;
+        return piece;
     };
 
-    this.stripPieces = function() {
+    this.stripPieces = function () {
         var pieces = stack.strip();
         this.updateState();
         return pieces;
     };
 
-    this.getColor = function() {
+    this.getColor = function () {
         var headPiece = stack.getHead();
 
-        if (headPiece !== null && headPiece !== undefined)
-          return headPiece.getColor();
+        if (headPiece !== null && headPiece !== undefined) {
+            return headPiece.getColor();
+        }
     };
 
-    this.placePieces = function(arrayPieces) {
+    this.placePieces = function (arrayPieces) {
         for (var i = 0; i < arrayPieces.length; i++) {
             stack.pushPiece(arrayPieces[i]);
         }
@@ -44,25 +53,15 @@ Lyngk.Intersection = function (c) {
         this.updateState();
     };
 
-    this.updateState = function() {
-        var pieceCount = stack.getHeight();
-
-        if (pieceCount === 1) {
-          state = Lyngk.State.ONE_PIECE;
-        } else if (pieceCount > 1 && pieceCount < 5) {
-            state = Lyngk.State.STACK;
-        } else if (pieceCount === 5) {
-            state = Lyngk.State.FULL_STACK;
-        } else if (pieceCount === 0) {
-            state = Lyngk.State.VACANT;
-        }
+    this.updateState = function () {
+        state = Lyngk.StateRange[stack.getHeight()];
     };
 
-    this.getCoordinates = function() {
+    this.getCoordinates = function () {
         return coordinates;
     };
 
-    this.getStack = function() {
+    this.getStack = function () {
         return stack;
-    }
+    };
 };
