@@ -365,3 +365,14 @@ LyngkTestCase.prototype.testStory27 = function() {
     assertEquals(engine.getPlayerPoints(Lyngk.Player.PLAYER_ONE), 1);
     assertEquals(engine.getPiecesLeft(), 38);
 };
+
+LyngkTestCase.prototype.testStory28 = function() {
+    var engine = new Lyngk.Engine();
+
+    assertTrue(engine.claim(Lyngk.Player.PLAYER_ONE, Lyngk.Color.IVORY));
+    assertEquals(Lyngk.Color.IVORY, engine.getIntersectionAt(new Lyngk.Coordinates("B", 5)).getColor());
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("B", 5), new Lyngk.Coordinates("B", 4)));
+
+    assertEquals(Lyngk.Color.IVORY, engine.getIntersectionAt(new Lyngk.Coordinates("C", 5)).getColor());
+    assertFalse(engine.movePiecesFromTo(new Lyngk.Coordinates("C", 5), new Lyngk.Coordinates("B", 4)));
+};
