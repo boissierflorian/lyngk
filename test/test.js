@@ -391,3 +391,28 @@ LyngkTestCase.prototype.testStory30 = function() {
 
     assertEquals(32, engine.getCurrentPlayerMovesCount());
 };
+
+LyngkTestCase.prototype.testStory31 = function() {
+    var engine = new Lyngk.Engine();
+    var source = engine.getIntersectionAt(new Lyngk.Coordinates("E", 4));
+    var moves = [new Lyngk.Coordinates("E", 5), new Lyngk.Coordinates("E", 3),
+        new Lyngk.Coordinates("D", 4), new Lyngk.Coordinates("D", 3),
+        new Lyngk.Coordinates("F", 4), new Lyngk.Coordinates("F", 5)];
+
+    var availableMoves = engine._getValidMovesFrom(source);
+
+    assertEquals(moves.length, availableMoves.length);
+
+    for (var i = 0; i < moves.length; i++) {
+        var found = false;
+
+        for (var j = 0; j < availableMoves.length; j++) {
+            if (moves[i].equals(availableMoves[j])) {
+                found = true;
+                break;
+            }
+        }
+
+        assertTrue(found);
+    }
+};
