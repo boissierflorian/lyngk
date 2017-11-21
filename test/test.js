@@ -381,3 +381,13 @@ LyngkTestCase.prototype.testStory29 = function() {
     var engine = new Lyngk.Engine();
     assertEquals(40, engine.getCurrentPlayerMovesCount());
 };
+
+LyngkTestCase.prototype.testStory30 = function() {
+    var engine = new Lyngk.Engine();
+
+    assertTrue(engine.claim(Lyngk.Player.PLAYER_ONE, Lyngk.Color.IVORY));
+    assertEquals(Lyngk.Color.IVORY, engine.getIntersectionAt(new Lyngk.Coordinates("C", 2)).getColor());
+    assertTrue(engine.movePiecesFromTo(new Lyngk.Coordinates("C", 2), new Lyngk.Coordinates("C", 1)));
+
+    assertEquals(32, engine.getCurrentPlayerMovesCount());
+};
