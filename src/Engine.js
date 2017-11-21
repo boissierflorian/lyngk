@@ -291,6 +291,20 @@ Lyngk.Engine = function () {
         return true;
     };
 
+    this.getCurrentPlayerMovesCount = function() {
+        var count = 0;
+        var isP1 = currentPlayer === Lyngk.Player.PLAYER_ONE;
+
+        for (var i = 0; i < intersections.length; i++) {
+            if (intersections[i].getState() !== Lyngk.State.VACANT &&
+                intersections[i].getColor() !== Lyngk.Color.WHITE &&
+                !this._intersectionHasPlayerColors(intersections[i], !isP1)) {
+                count++;
+            }
+        }
+
+        return count;
+    };
 
     this.getIntersections = function() {
         return intersections;
