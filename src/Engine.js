@@ -181,8 +181,18 @@ Lyngk.Engine = function () {
         return source.getStack().getHeight() >= dest.getStack().getHeight();
     };
 
+    this._isAllowedToMovePieces = function(source) {
+        if (source.getColor() === Lyngk.Color.WHITE) {
+            return true;
+        }
+
+        var player = (currentPlayer === Lyngk.Player.PLAYER_ONE);
+        return !this._intersectionHasPlayerColors(source, !player);
+    };
+
     this._isValidMove = function(source, dest) {
         return this._checkStatesForMove(source, dest) &&
+            this._isAllowedToMovePieces(source) &&
             this._checkHeightsForMove(source, dest) &&
             this._checkColorsForMove(source, dest) &&
             this._canMoveTo(source, dest);
