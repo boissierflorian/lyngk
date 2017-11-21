@@ -376,3 +376,8 @@ LyngkTestCase.prototype.testStory28 = function() {
     assertEquals(Lyngk.Color.IVORY, engine.getIntersectionAt(new Lyngk.Coordinates("C", 5)).getColor());
     assertFalse(engine.movePiecesFromTo(new Lyngk.Coordinates("C", 5), new Lyngk.Coordinates("B", 4)));
 };
+
+LyngkTestCase.prototype.testStory29 = function() {
+    var engine = new Lyngk.Engine();
+    assertEquals(40, engine.getCurrentPlayerMovesCount());
+};
