@@ -3,6 +3,7 @@
 // enums definition
 Lyngk.Color = {BLACK: 0, IVORY: 1, BLUE: 2, RED: 3, GREEN: 4, WHITE: 5};
 Lyngk.Player = {PLAYER_ONE : 0, PLAYER_TWO : 1};
+Lyngk.InvalidStateForMove = [Lyngk.State.VACANT, Lyngk.State.FULL_STACK];
 
 Lyngk.Engine = function () {
     var intersections = [];
@@ -45,6 +46,12 @@ Lyngk.Engine = function () {
         intersections.push(intersection);
     };
 
+    var _fillBoardWithValidCoordinate = function(coordinate, pieces) {
+        if (coordinate.isValid()) {
+            _addIntersection(coordinate, pieces);
+        }
+    };
+
     var _fillBoard = function() {
         var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
         var pieces = _initPieces();
@@ -53,10 +60,7 @@ Lyngk.Engine = function () {
         for (var line = 1; line < 10; line++) {
             for (var i = 0; i < letters.length; i++) {
                 var coordinate = new Lyngk.Coordinates(letters[i], line);
-
-                if (coordinate.isValid()) {
-                    _addIntersection(coordinate, pieces);
-                }
+                _fillBoardWithValidCoordinate(coordinate, pieces);
             }
         }
     };
@@ -92,11 +96,7 @@ Lyngk.Engine = function () {
         return true;
     };
 
-    this.getIntersectionAt = function(coordinates) {
-        if (!coordinates.isValid()) {
-            return null;
-        }
-
+    this.getIntersectionFromCoordinates = function(coordinates) {
         for (var i = 0; i < intersections.length; i++) {
             if (intersections[i].getCoordinates().equals(coordinates)) {
                 return intersections[i];
@@ -106,31 +106,49 @@ Lyngk.Engine = function () {
         return null;
     };
 
-    this._getValidMovesFrom = function(source) {
-        var sourceCol = source.getCoordinates().getColonne();
-        var sourceLine = source.getCoordinates().getLigne();
-        var moves = [];
+    this.getIntersectionAt = function(coordinates) {
+        if (!coordinates.isValid()) {
+            return null;
+        }
+
+        return this.getIntersectionFromCoordinates(coordinates);
+    };
+
+    this._fillPossibleMoves = function(sourceCol, sourceLine, moves) {
+        var leftChar = String.fromCharCode(sourceCol.charCodeAt(0) - 1);
+        var rightChar = String.fromCharCode(sourceCol.charCodeAt(0) + 1);
 
         // top
         moves.push(new Lyngk.Coordinates(sourceCol, sourceLine + 1));
         // bottom
         moves.push(new Lyngk.Coordinates(sourceCol, sourceLine - 1));
         // top left
-        moves.push(new Lyngk.Coordinates(String.fromCharCode(sourceCol.charCodeAt(0) - 1), sourceLine));
+        moves.push(new Lyngk.Coordinates(leftChar, sourceLine));
         // top right
-        moves.push(new Lyngk.Coordinates(String.fromCharCode(sourceCol.charCodeAt(0) + 1), sourceLine + 1));
+        moves.push(new Lyngk.Coordinates(rightChar, sourceLine + 1));
         // bottom left
-        moves.push(new Lyngk.Coordinates(String.fromCharCode(sourceCol.charCodeAt(0) - 1), sourceLine - 1));
+        moves.push(new Lyngk.Coordinates(leftChar, sourceLine - 1));
         // bottom right
-        moves.push(new Lyngk.Coordinates(String.fromCharCode(sourceCol.charCodeAt(0) + 1), sourceLine));
+        moves.push(new Lyngk.Coordinates(rightChar, sourceLine));
+    };
 
+    this._getValidMovesFrom = function(source) {
+        var sourceCol = source.getCoordinates().getColonne();
+        var sourceLine = source.getCoordinates().getLigne();
+        var moves = [];
+
+        this._fillPossibleMoves(sourceCol, sourceLine, moves);
         return moves;
     };
 
     this._checkStatesForMove = function(source, dest) {
-        return !(source.getState() === Lyngk.State.VACANT || dest.getState() === Lyngk.State.VACANT ||
-            source.getState() === Lyngk.State.FULL_STACK || dest.getState() === Lyngk.State.FULL_STACK ||
-            (source.getState() === Lyngk.State.ONE_PIECE && dest.getState() > Lyngk.State.ONE_PIECE));
+        if (source.getState() === Lyngk.State.ONE_PIECE &&
+            dest.getState() > Lyngk.State.ONE_PIECE) {
+            return false;
+        }
+
+        return Lyngk.InvalidStateForMove.indexOf(source.getState()) === -1 &&
+            Lyngk.InvalidStateForMove.indexOf(dest.getState()) === -1;
     };
 
     this._checkColorsForMove = function (source, dest) {
@@ -164,17 +182,15 @@ Lyngk.Engine = function () {
     };
 
     this._isValidMove = function(source, dest) {
-        return this._checkStatesForMove(source, dest) && this._checkHeightsForMove(source, dest) &&
-            this._checkColorsForMove(source, dest) && this._canMoveTo(source, dest);
+        return this._checkStatesForMove(source, dest) &&
+            this._checkHeightsForMove(source, dest) &&
+            this._checkColorsForMove(source, dest) &&
+            this._canMoveTo(source, dest);
     };
 
     this._checkIntersectionsForMove = function(interSource, interDest) {
-        if (interSource === null || interSource === undefined ||
-            interDest === null || interDest === undefined) {
-            return false;
-        }
-
-        return this._isValidMove(interSource, interDest);
+        return Lyngk.areValidObjects(interSource, interDest) &&
+            this._isValidMove(interSource, interDest);
     };
 
     this._updateTurn = function(interDest) {
@@ -182,22 +198,33 @@ Lyngk.Engine = function () {
         this._nextPlayer();
     };
 
-    this._updatePoints = function(interDest) {
-        if (interDest.getState() !== Lyngk.State.FULL_STACK) { return; }
-        var colors = (currentPlayer === Lyngk.Player.PLAYER_ONE ?
-            playerOneColors : playerTwoColors);
-
-        for (var i = 0; i < colors.length; i++) {
-            if (interDest.getColor() === colors[i]) {
-                if (currentPlayer === Lyngk.Player.PLAYER_ONE) {
-                    playerOnePoints++;
-                } else {
-                    playerTwoPoints++;
-                }
-                interDest.stripPieces();
-                break;
-            }
+    this._intersectionHasPlayerColors = function(intersection, isPlayerOne) {
+        if (isPlayerOne) {
+            return playerOneColors.indexOf(intersection.getColor()) !== -1;
         }
+
+        return playerTwoColors.indexOf(intersection.getColor()) !== -1;
+    };
+
+    this._updatePlayerPoints = function(isPlayerOne, interDest) {
+        if (this._intersectionHasPlayerColors(interDest, isPlayerOne)) {
+            if (isPlayerOne) {
+                playerOnePoints++;
+            } else {
+                playerTwoPoints++;
+            }
+
+            interDest.stripPieces();
+        }
+    };
+
+    this._updatePoints = function(interDest) {
+        if (interDest.getState() !== Lyngk.State.FULL_STACK) {
+            return;
+        }
+
+        var isPlayerOne = currentPlayer === Lyngk.Player.PLAYER_ONE;
+        this._updatePlayerPoints(isPlayerOne, interDest);
     };
 
     this._nextPlayer = function() {
@@ -223,20 +250,34 @@ Lyngk.Engine = function () {
         return true;
     };
 
-    this.claim = function(player, color) {
+    this._checkClaimColors = function(playerColors, otherColors, color) {
+        return playerColors.indexOf(color) === -1 &&
+            otherColors.indexOf(color) === -1 &&
+            playerColors.length < 2;
+    };
+
+    this._canClaim = function(player, color) {
         if (currentPlayer !== player) { return false; }
 
-        var colors = currentPlayer === Lyngk.Player.PLAYER_ONE ?
-            playerOneColors : playerTwoColors;
-        var otherColors = currentPlayer === Lyngk.Player.PLAYER_ONE ?
-            playerTwoColors : playerOneColors;
+        if (currentPlayer === Lyngk.Player.PLAYER_ONE) {
+            return this._checkClaimColors(playerOneColors,
+                playerTwoColors, color);
+        }
 
-        if (colors.length === 2 || colors.indexOf(color) !== -1 ||
-            otherColors.indexOf(color) !== -1){
+        return this._checkClaimColors(playerTwoColors, playerOneColors, color);
+    };
+
+    this.claim = function(player, color) {
+        if (!this._canClaim(player, color)) {
             return false;
         }
 
-        colors.push(color);
+        if (currentPlayer === Lyngk.Player.PLAYER_ONE) {
+            playerOneColors.push(color);
+        } else {
+            playerTwoColors.push(color);
+        }
+
         return true;
     };
 
